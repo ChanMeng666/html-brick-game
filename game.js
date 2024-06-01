@@ -2,10 +2,10 @@ const canvas = document.getElementById("gameCanvas");
 const ctx = canvas.getContext("2d");
 
 let ballRadius = 10;
-let x = canvas.width / 2;
-let y = canvas.height - 30;
-let dx = 4;
-let dy = -4;
+let x;
+let y;
+let dx;
+let dy;
 
 let paddleHeight = 10;
 let paddleWidth = 75;
@@ -33,6 +33,14 @@ for (let c = 0; c < brickColumnCount; c++) {
 let score = 0;
 let lives = 3;
 
+const starImage = new Image();
+starImage.src = 'start.svg';
+
+const paddleImage = new Image();
+paddleImage.src = 'deer.svg';
+
+const tailParticles = [];  // For storing meteor tail particles
+
 document.addEventListener("mousemove", mouseMoveHandler, false);
 
 function mouseMoveHandler(e) {
@@ -51,9 +59,9 @@ function collisionDetection() {
                     dy = -dy;
                     b.status = 0;
                     score++;
+                    generateCollisionEffect(b.x + brickWidth / 2, b.y + brickHeight / 2);  // Generate brick hitting effects
                     if (score == brickRowCount * brickColumnCount) {
-                        showMessage("Victory! Another round?");
-                        resetGame();
+                        showMessage("Victory! Start a new game?", resetGame);
                     }
                 }
             }
@@ -61,24 +69,20 @@ function collisionDetection() {
     }
 }
 
+
 function drawBall() {
-    ctx.beginPath();
-    ctx.arc(x, y, ballRadius, 0, Math.PI * 2);
-    ctx.fillStyle = "#e74c3c";
-    ctx.fill();
-    ctx.strokeStyle = "#c0392b";
-    ctx.stroke();
-    ctx.closePath();
+    ctx.drawImage(starImage, x - ballRadius, y - ballRadius, ballRadius * 2, ballRadius * 2);
 }
 
+
 function drawPaddle() {
-    ctx.beginPath();
-    ctx.rect(paddleX, canvas.height - paddleHeight, paddleWidth, paddleHeight);
-    ctx.fillStyle = "#3498db";
-    ctx.fill();
-    ctx.strokeStyle = "#2980b9";
-    ctx.stroke();
-    ctx.closePath();
+    const scaleFactor = 1.2;  // Scaling factor to slightly increase width and height
+    const scaledWidth = paddleWidth * scaleFactor;
+    const scaledHeight = paddleHeight * scaleFactor * 6;
+    const offsetX = (scaledWidth - paddleWidth) / 2;
+    const offsetY = (scaledHeight - paddleHeight) / 2;
+
+    ctx.drawImage(paddleImage, paddleX - offsetX, canvas.height - paddleHeight - offsetY, scaledWidth, scaledHeight);
 }
 
 function drawBricks() {
@@ -104,19 +108,64 @@ function drawBricks() {
 
 function drawScore() {
     ctx.font = "16px Arial";
-    ctx.fillStyle = "#fff";
+    ctx.fillStyle = "#2d3436";
     ctx.fillText("Score: " + score, 8, 20);
 }
 
 function drawLives() {
     ctx.font = "16px Arial";
-    ctx.fillStyle = "#fff";
+    ctx.fillStyle = "#2d3436";
     ctx.fillText("Lives: " + lives, canvas.width - 65, 20);
+}
+
+
+function drawTailParticles() {
+    for (let i = 0; i < tailParticles.length; i++) {
+        let particle = tailParticles[i];
+        ctx.beginPath();
+        ctx.arc(particle.x, particle.y, particle.radius, 0, Math.PI * 2);
+        ctx.fillStyle = `rgba(255, 255, 255, ${particle.alpha})`;
+        ctx.fill();
+        ctx.closePath();
+        particle.x += particle.dx;
+        particle.y += particle.dy;
+        particle.alpha *= 0.98;
+        particle.radius *= 0.98;
+        if (particle.alpha < 0.05 || particle.radius < 1) {
+            tailParticles.splice(i, 1);
+            i--;
+        }
+    }
+}
+
+function generateTailParticle(x, y) {
+    tailParticles.push({
+        x: x,
+        y: y,
+        dx: (Math.random() - 0.5) * 2,
+        dy: (Math.random() - 0.5) * 2,
+        radius: ballRadius / 2,
+        alpha: 1.0
+    });
+}
+
+function generateCollisionEffect(x, y) {
+    for (let i = 0; i < 10; i++) {
+        tailParticles.push({
+            x: x,
+            y: y,
+            dx: (Math.random() - 0.5) * 4,
+            dy: (Math.random() - 0.5) * 4,
+            radius: ballRadius / 2,
+            alpha: 1.0
+        });
+    }
 }
 
 function draw() {
     ctx.clearRect(0, 0, canvas.width, canvas.height);
     drawBricks();
+    drawTailParticles();
     drawBall();
     drawPaddle();
     drawScore();
@@ -131,18 +180,25 @@ function draw() {
     } else if (y + dy > canvas.height - ballRadius) {
         if (x > paddleX && x < paddleX + paddleWidth) {
             dy = -dy;
+            generateCollisionEffect(x, canvas.height - paddleHeight);  // 生成碰撞反弹板效果
         } else {
-            showMessage("Fail! Another round?");
-            resetGame();
+            lives--;
+            if (lives > 0) {
+                showMessage("Fail! Another round?", resumeGame);
+            } else {
+                showMessage("Fail! Start a new game?", resetGame);
+            }
+            return; // Stops the current drawing loop and waits for user input.
         }
     }
 
     x += dx;
     y += dy;
+    generateTailParticle(x, y);  // Generate meteor tail particles
     requestAnimationFrame(draw);
 }
 
-function showMessage(message) {
+function showMessage(message, callback) {
     const messageBox = document.getElementById("messageBox");
     const messageText = document.getElementById("messageText");
     const messageButton = document.getElementById("messageButton");
@@ -152,12 +208,27 @@ function showMessage(message) {
 
     messageButton.onclick = () => {
         messageBox.classList.add("hidden");
-        initGame();
+        callback();
     };
 }
 
 function resetGame() {
-    document.location.reload();
+    lives = 3;
+    score = 0;
+    for (let c = 0; c < brickColumnCount; c++) {
+        for (let r = 0; r < brickRowCount; r++) {
+            bricks[c][r].status = 1;
+        }
+    }
+    initGame();
+}
+
+function resumeGame() {
+    x = canvas.width / 2;
+    y = canvas.height - 30;
+    dx = 4;
+    dy = -4;
+    draw();
 }
 
 function initGame() {
@@ -165,16 +236,9 @@ function initGame() {
     y = canvas.height - 30;
     dx = 4;
     dy = -4;
-    score = 0;
-    lives = 3;
-    for (let c = 0; c < brickColumnCount; c++) {
-        for (let r = 0; r < brickRowCount; r++) {
-            bricks[c][r].status = 1;
-        }
-    }
     draw();
 }
 
 document.addEventListener("DOMContentLoaded", () => {
-    showMessage("Start the game?");
+    showMessage("Start the game?", initGame);
 });
