@@ -89,7 +89,5 @@ https://chanmeng666.github.io/html-brick-game/
 
 ---
 
-Created with ❤️ by 
-
-[ChanMeng]: https://github.com/ChanMeng666
+Created with ❤️ by [ChanMeng666](https://github.com/ChanMeng666)
 
