@@ -8,6 +8,8 @@
 </div>
 <br/>
 
+![屏幕截图 2024-12-08 191344](https://github.com/user-attachments/assets/d64bcba2-a283-47de-bcd3-11c265238775)
+
 # Features
 A modern artistic reimagining of the classic Brick Breaker game with unique visual elements and smooth gameplay mechanics.
 
