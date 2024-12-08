@@ -1,5 +1,5 @@
 <div align="center">
- <h1> <img src="/deer.svg" width="80px"><br/>Starlight Brick Breaker</h1>
+ <h1> <img src="/html-brick-game-logo.png" width="80px"><br/>Starlight Brick Breaker</h1>
  <img src="https://img.shields.io/badge/html5-%23E34F26.svg?style=flat&logo=html5&logoColor=white"/>
  <img src="https://img.shields.io/badge/css3-%231572B6.svg?style=flat&logo=css3&logoColor=white"/>
  <img src="https://img.shields.io/badge/javascript-%23323330.svg?style=flat&logo=javascript&logoColor=%23F7DF1E"/>
