@@ -8,6 +8,11 @@
 </div>
 <br/>
 
+<br/>
+
+[![Explore GitHub Profile README Generator](https://gradient-svg-generator.vercel.app/?text=👉+Try+It+Now!+👈&height=40&template=pride-rainbow)](https://chanmeng666.github.io/html-brick-game/)
+
+<br/>
 
 https://github.com/user-attachments/assets/21a1ed86-09b0-4699-83d4-43c1e336103f
 
