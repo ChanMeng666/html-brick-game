@@ -48,6 +48,14 @@ One-click **FREE** deployment and instant play - no installation required.
   <p><em>Starlight Brick Breaker - Gameplay Demo</em></p>
 </div>
 
+![屏幕截图 2025-07-04 184513](https://github.com/user-attachments/assets/0a9552cc-bc7b-4be4-a330-15523b77bb0b)
+
+![屏幕截图 2025-07-04 184529](https://github.com/user-attachments/assets/d39bb988-3eb3-42e0-9076-84843bd4f294)
+
+![屏幕截图 2025-07-04 184541](https://github.com/user-attachments/assets/d0f122e3-5a38-42aa-a847-fe3b3d7c0791)
+
+![屏幕截图 2025-07-04 184552](https://github.com/user-attachments/assets/ac51f7fc-ba7d-4c4b-ad92-07b48e4c421a)
+
 <div align="center">
   <img src="https://github.com/user-attachments/assets/d64bcba2-a283-47de-bcd3-11c265238775" alt="Game Screenshot" width="800"/>
   <p><em>Main Game Interface - Beautiful particle effects in action</em></p>
