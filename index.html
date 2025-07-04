@@ -2,13 +2,71 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Brick Game</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <title>🌟 Starlight Breaker</title>
     <link rel="stylesheet" href="styles.css">
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🌟</text></svg>">
 </head>
 <body>
     <div id="gameContainer">
         <canvas id="gameCanvas" width="800" height="600"></canvas>
+    </div>
+
+    <!-- 开始菜单 -->
+    <div id="startMenu" class="menu active">
+        <div class="menu-content">
+            <h1>🌟 STARLIGHT BREAKER</h1>
+            <p class="subtitle">An Artistic Brick Breaking Experience</p>
+            <button id="startGameBtn" class="menu-button">START GAME</button>
+            <button id="instructionsBtn" class="menu-button">INSTRUCTIONS</button>
+            <button id="highScoreBtn" class="menu-button">HIGH SCORES</button>
+        </div>
+    </div>
+
+    <!-- 游戏中菜单 -->
+    <div id="gameMenu">
+        <div class="game-ui">
+            <button id="pauseBtn" class="ui-button">⏸️ PAUSE</button>
+            <button id="menuBtn" class="ui-button">🏠 MENU</button>
+        </div>
+    </div>
+
+    <!-- 说明页面 -->
+    <div id="instructionsMenu" class="menu">
+        <div class="menu-content">
+            <h2>🎮 HOW TO PLAY</h2>
+            <div class="instructions">
+                <p>🖱️ Move your mouse to control the deer paddle</p>
+                <p>📱 On mobile: Touch and drag to move the paddle</p>
+                <p>⭐ Bounce the star ball to break all bricks</p>
+                <p>💖 You have 3 lives - don't let the ball fall!</p>
+                <p>🎯 Clear all bricks to win the game</p>
+                <p>⌨️ Press ESC to pause/resume the game</p>
+            </div>
+            <button id="backToMenuBtn" class="menu-button">BACK TO MENU</button>
+        </div>
+    </div>
+
+    <!-- 高分榜 -->
+    <div id="highScoreMenu" class="menu">
+        <div class="menu-content">
+            <h2>🏆 HIGH SCORES</h2>
+            <div id="highScoreList" class="high-score-list">
+                <!-- 高分记录将在这里显示 -->
+            </div>
+            <button id="clearScoresBtn" class="menu-button secondary">CLEAR SCORES</button>
+            <button id="backToMenuFromScoresBtn" class="menu-button">BACK TO MENU</button>
+        </div>
+    </div>
+
+    <!-- 暂停菜单 -->
+    <div id="pauseMenu" class="menu">
+        <div class="menu-content">
+            <h2>⏸️ GAME PAUSED</h2>
+            <button id="resumeBtn" class="menu-button">RESUME</button>
+            <button id="restartBtn" class="menu-button">RESTART</button>
+            <button id="backToMainMenuBtn" class="menu-button">MAIN MENU</button>
+        </div>
     </div>
 
     <!-- pop-up window alert -->
