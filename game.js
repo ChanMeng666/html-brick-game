@@ -247,7 +247,7 @@ function drawBall() {
     
     // 绘制星星
     if (starImage.complete) {
-        ctx.drawImage(starImage, x - ballRadius, y - ballRadius, ballRadius * 2, ballRadius * 2);
+    ctx.drawImage(starImage, x - ballRadius, y - ballRadius, ballRadius * 2, ballRadius * 2);
     }
 }
 
@@ -308,7 +308,7 @@ function drawBricks() {
                 if (ctx.roundRect) {
                     ctx.roundRect(brickX, brickY, brickWidth, brickHeight, 8);
                 } else {
-                    ctx.rect(brickX, brickY, brickWidth, brickHeight);
+                ctx.rect(brickX, brickY, brickWidth, brickHeight);
                 }
                 ctx.fillStyle = gradient;
                 ctx.fill();
