@@ -305,6 +305,34 @@ button:hover {
     .high-score-list {
         font-size: 14px;
     }
+    
+    /* Developer Branding Mobile Styles */
+    .developer-branding {
+        margin-top: 30px;
+        padding: 15px;
+    }
+    
+    .chan-logo {
+        height: 35px;
+    }
+    
+    .developer-name {
+        font-size: 14px;
+    }
+    
+    .developer-tagline {
+        font-size: 12px;
+        margin: 8px 0 12px 0;
+    }
+    
+    .developer-links {
+        gap: 10px;
+    }
+    
+    .dev-link {
+        padding: 6px 12px;
+        font-size: 11px;
+    }
 }
 
 @media (max-width: 480px) {
@@ -330,6 +358,37 @@ button:hover {
     .menu-content {
         padding: 15px;
         margin: 10px;
+    }
+    
+    /* Developer Branding Very Small Mobile Styles */
+    .developer-branding {
+        margin-top: 20px;
+        padding: 12px;
+    }
+    
+    .chan-logo {
+        height: 30px;
+    }
+    
+    .developer-name {
+        font-size: 13px;
+    }
+    
+    .developer-tagline {
+        font-size: 11px;
+        margin: 6px 0 10px 0;
+    }
+    
+    .developer-links {
+        gap: 8px;
+        flex-direction: column;
+        align-items: center;
+    }
+    
+    .dev-link {
+        padding: 5px 10px;
+        font-size: 10px;
+        min-width: 80px;
     }
 }
 
@@ -373,4 +432,93 @@ body::before {
 #gameContainer {
     position: relative;
     animation: glow 3s ease-in-out infinite;
+}
+
+/* Developer Branding Styles */
+.developer-branding {
+    margin-top: 40px;
+    padding: 20px;
+    background: linear-gradient(135deg, rgba(0, 212, 255, 0.1), rgba(30, 60, 114, 0.1));
+    border: 1px solid rgba(0, 212, 255, 0.3);
+    border-radius: 15px;
+    backdrop-filter: blur(5px);
+    text-align: center;
+    transition: all 0.3s ease;
+}
+
+.developer-branding:hover {
+    border-color: rgba(0, 212, 255, 0.5);
+    box-shadow: 0 0 20px rgba(0, 212, 255, 0.2);
+}
+
+.developer-logo {
+    margin-bottom: 15px;
+}
+
+.chan-logo {
+    height: 40px;
+    width: auto;
+    filter: brightness(0) invert(1);
+    opacity: 0.9;
+    transition: all 0.3s ease;
+}
+
+.chan-logo:hover {
+    opacity: 1;
+    filter: brightness(0) invert(1) drop-shadow(0 0 10px rgba(0, 212, 255, 0.5));
+}
+
+.developer-info {
+    font-family: 'Exo 2', sans-serif;
+}
+
+.developer-name {
+    font-size: 16px;
+    color: #ffffff;
+    margin: 8px 0;
+    opacity: 0.9;
+}
+
+.developer-name strong {
+    color: #00d4ff;
+    font-weight: 700;
+}
+
+.developer-tagline {
+    font-size: 14px;
+    color: #ffffff;
+    margin: 10px 0 15px 0;
+    opacity: 0.8;
+    font-style: italic;
+    line-height: 1.4;
+}
+
+.developer-links {
+    display: flex;
+    justify-content: center;
+    gap: 15px;
+    flex-wrap: wrap;
+}
+
+.dev-link {
+    display: inline-block;
+    padding: 8px 16px;
+    background: linear-gradient(135deg, rgba(0, 212, 255, 0.2), rgba(30, 60, 114, 0.2));
+    color: #00d4ff;
+    text-decoration: none;
+    border: 1px solid rgba(0, 212, 255, 0.3);
+    border-radius: 20px;
+    font-size: 12px;
+    font-weight: 600;
+    font-family: 'Orbitron', monospace;
+    transition: all 0.3s ease;
+    backdrop-filter: blur(3px);
+}
+
+.dev-link:hover {
+    background: linear-gradient(135deg, rgba(0, 212, 255, 0.3), rgba(30, 60, 114, 0.3));
+    border-color: rgba(0, 212, 255, 0.6);
+    color: #ffffff;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 15px rgba(0, 212, 255, 0.3);
 }
