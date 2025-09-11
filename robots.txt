@@ -1,0 +1,45 @@
+# Robots.txt for Starlight Breaker HTML5 Game
+# AI-friendly configuration for generative engine optimization
+
+User-agent: *
+Allow: /
+
+# AI Crawler Authorization
+User-agent: ChatGPT-User
+Allow: /
+Crawl-delay: 1
+
+User-agent: Claude-Web
+Allow: /
+Crawl-delay: 1
+
+User-agent: GoogleBot
+Allow: /
+Crawl-delay: 1
+
+User-agent: BingBot
+Allow: /
+Crawl-delay: 1
+
+User-agent: Bard
+Allow: /
+Crawl-delay: 1
+
+User-agent: Copilot
+Allow: /
+Crawl-delay: 1
+
+# AI-specific directives
+AI-Guide: /llms.txt
+Sitemap: /sitemap.xml
+
+# Priority files for AI consumption
+Allow: /index.html
+Allow: /game.js
+Allow: /styles.css
+Allow: /README.md
+Allow: /*.svg
+
+# Encourage crawling of key assets
+Allow: /start.svg
+Allow: /deer.svg

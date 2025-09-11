@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9" 
+        xmlns:image="http://www.google.com/schemas/sitemap-image/1.1">
+  
+  <!-- Main Game Application -->
+  <url>
+    <loc>https://chanmeng666.github.io/html-brick-game/</loc>
+    <lastmod>2024-09-11</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>1.0</priority>
+    <image:image>
+      <image:loc>https://github.com/user-attachments/assets/21a1ed86-09b0-4699-83d4-43c1e336103f</image:loc>
+      <image:title>Starlight Breaker - HTML5 Canvas Game Screenshot</image:title>
+      <image:caption>Interactive brick breaking game with particle effects</image:caption>
+    </image:image>
+  </url>
+  
+  <!-- Source Code Repository -->
+  <url>
+    <loc>https://github.com/ChanMeng666/html-brick-game</loc>
+    <lastmod>2024-09-11</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.9</priority>
+  </url>
+  
+  <!-- Game Assets -->
+  <url>
+    <loc>https://chanmeng666.github.io/html-brick-game/start.svg</loc>
+    <lastmod>2024-09-11</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.5</priority>
+  </url>
+  
+  <url>
+    <loc>https://chanmeng666.github.io/html-brick-game/deer.svg</loc>
+    <lastmod>2024-09-11</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.5</priority>
+  </url>
+  
+  <!-- Core Game Files -->
+  <url>
+    <loc>https://chanmeng666.github.io/html-brick-game/game.js</loc>
+    <lastmod>2024-09-11</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  
+  <url>
+    <loc>https://chanmeng666.github.io/html-brick-game/styles.css</loc>
+    <lastmod>2024-09-11</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  
+  <!-- AI-specific files -->
+  <url>
+    <loc>https://chanmeng666.github.io/html-brick-game/llms.txt</loc>
+    <lastmod>2024-09-11</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  
+  <url>
+    <loc>https://chanmeng666.github.io/html-brick-game/robots.txt</loc>
+    <lastmod>2024-09-11</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+
+</urlset>
