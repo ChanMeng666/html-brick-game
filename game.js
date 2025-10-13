@@ -79,6 +79,12 @@ function getOptimalCanvasSize() {
 
 // 调整 Canvas 尺寸
 function resizeCanvas() {
+    // 安全检查：确保 canvas 元素存在
+    if (!canvas) {
+        console.error('Canvas element not found');
+        return;
+    }
+
     const size = getOptimalCanvasSize();
     const oldWidth = canvas.width;
     const oldHeight = canvas.height;
@@ -104,9 +110,6 @@ function resizeCanvas() {
 
     console.log(`Canvas resized to ${size.width}x${size.height}`);
 }
-
-// 初始化 Canvas 尺寸
-resizeCanvas();
 
 // 性能配置：根据设备调整粒子效果
 const performanceConfig = {
@@ -164,9 +167,6 @@ window.addEventListener('orientationchange', () => {
 window.addEventListener('resize', () => {
     checkOrientation();
 });
-
-// 初始化方向检测
-checkOrientation();
 
 // 音效系统
 const audioContext = new (window.AudioContext || window.webkitAudioContext)();
@@ -810,10 +810,16 @@ function backToMainMenu() {
 // 事件监听器
 document.addEventListener("DOMContentLoaded", () => {
     console.log('DOM Content Loaded - Initializing game...');
-    
+
+    // 初始化 Canvas 尺寸（必须在 DOM 加载后）
+    resizeCanvas();
+
+    // 初始化方向检测
+    checkOrientation();
+
     // 确保初始状态正确
     gameState = 'menu';
-    
+
     // 确保开始菜单显示
     setTimeout(() => {
         console.log('Setting up initial menu state...');
@@ -952,6 +958,11 @@ window.forceShowStartMenu = function() {
 // 备用初始化 - 如果DOMContentLoaded没有触发
 window.addEventListener('load', () => {
     console.log('Window load event - backup initialization');
+
+    // 初始化 Canvas 尺寸（备用）
+    if (canvas && canvas.width === 0) {
+        resizeCanvas();
+    }
 
     // 确保开始菜单显示
     const startMenu = document.getElementById('startMenu');
