@@ -38,6 +38,136 @@
 const canvas = document.getElementById("gameCanvas");
 const ctx = canvas.getContext("2d");
 
+// 设备和屏幕检测
+const isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
+const isSmallScreen = () => window.innerWidth < 768;
+const isVerySmallScreen = () => window.innerWidth < 480;
+
+// 响应式 Canvas 尺寸配置
+function getOptimalCanvasSize() {
+    const maxWidth = window.innerWidth - 40; // 留边距
+    const maxHeight = window.innerHeight - 40;
+
+    // 默认比例 4:3
+    const aspectRatio = 4 / 3;
+
+    let width, height;
+
+    if (isVerySmallScreen()) {
+        // 超小屏幕：使用更小的尺寸
+        width = Math.min(320, maxWidth);
+        height = Math.min(240, maxHeight);
+    } else if (isSmallScreen()) {
+        // 小屏幕：中等尺寸
+        width = Math.min(480, maxWidth);
+        height = Math.min(360, maxHeight);
+    } else {
+        // 桌面：原始尺寸
+        width = Math.min(800, maxWidth);
+        height = Math.min(600, maxHeight);
+    }
+
+    // 确保保持宽高比
+    if (width / height > aspectRatio) {
+        width = height * aspectRatio;
+    } else {
+        height = width / aspectRatio;
+    }
+
+    return { width: Math.floor(width), height: Math.floor(height) };
+}
+
+// 调整 Canvas 尺寸
+function resizeCanvas() {
+    const size = getOptimalCanvasSize();
+    const oldWidth = canvas.width;
+    const oldHeight = canvas.height;
+
+    // 更新 canvas 尺寸
+    canvas.width = size.width;
+    canvas.height = size.height;
+
+    // 如果游戏正在进行，需要重新缩放游戏元素
+    if (gameState === 'playing' && oldWidth !== size.width) {
+        const scaleX = size.width / oldWidth;
+        const scaleY = size.height / oldHeight;
+
+        // 缩放球的位置
+        x = x * scaleX;
+        y = y * scaleY;
+
+        // 缩放挡板位置
+        paddleX = paddleX * scaleX;
+
+        // 重新初始化砖块位置（通过下次绘制自动更新）
+    }
+
+    console.log(`Canvas resized to ${size.width}x${size.height}`);
+}
+
+// 初始化 Canvas 尺寸
+resizeCanvas();
+
+// 性能配置：根据设备调整粒子效果
+const performanceConfig = {
+    maxParticles: isSmallScreen() ? 50 : 100,  // 移动端减少粒子数量
+    particleGenerationRate: isSmallScreen() ? 0.5 : 1,  // 移动端降低生成频率
+    explosionParticleCount: isVerySmallScreen() ? 8 : (isSmallScreen() ? 10 : 15)  // 爆炸粒子数量
+};
+
+// 屏幕方向检测和提示
+function checkOrientation() {
+    if (!isMobile) return;
+
+    const orientationWarning = document.getElementById('orientationWarning');
+    if (!orientationWarning) return;
+
+    const isPortrait = window.innerHeight > window.innerWidth;
+
+    if (isPortrait && isSmallScreen()) {
+        // 竖屏且是小屏幕设备，显示提示
+        orientationWarning.classList.remove('hidden');
+    } else {
+        orientationWarning.classList.add('hidden');
+    }
+}
+
+// 触摸指引管理
+function showTouchGuide() {
+    if (!isMobile) return;
+
+    // 检查是否已显示过触摸指引
+    const hasSeenGuide = localStorage.getItem('hasSeenTouchGuide');
+
+    if (!hasSeenGuide) {
+        const touchGuide = document.getElementById('touchGuide');
+        if (touchGuide) {
+            touchGuide.classList.remove('hidden');
+
+            // 添加"知道了"按钮事件
+            const touchGuideBtn = document.getElementById('touchGuideBtn');
+            if (touchGuideBtn) {
+                touchGuideBtn.onclick = () => {
+                    touchGuide.classList.add('hidden');
+                    localStorage.setItem('hasSeenTouchGuide', 'true');
+                };
+            }
+        }
+    }
+}
+
+// 监听屏幕方向变化
+window.addEventListener('orientationchange', () => {
+    setTimeout(checkOrientation, 100);
+});
+
+window.addEventListener('resize', () => {
+    checkOrientation();
+});
+
+// 初始化方向检测
+checkOrientation();
+
 // 音效系统
 const audioContext = new (window.AudioContext || window.webkitAudioContext)();
 
@@ -143,37 +273,62 @@ paddleImage.src = 'deer.svg';
 
 const tailParticles = [];  // For storing meteor tail particles
 
+// 振动反馈功能
+function vibrateDevice(duration = 10) {
+    if (isMobile && 'vibrate' in navigator) {
+        navigator.vibrate(duration);
+    }
+}
+
+// 改进的触摸位置计算
+function getTouchPosition(touch) {
+    const rect = canvas.getBoundingClientRect();
+    const scaleX = canvas.width / rect.width;
+    const relativeX = (touch.clientX - rect.left) * scaleX;
+    return relativeX;
+}
+
 // 鼠标和触摸事件处理
 document.addEventListener("mousemove", mouseMoveHandler, false);
 document.addEventListener("touchmove", touchMoveHandler, { passive: false });
 document.addEventListener("touchstart", touchStartHandler, { passive: false });
 
 function mouseMoveHandler(e) {
-    let relativeX = e.clientX - canvas.offsetLeft;
+    if (gameState !== 'playing') return;
+
+    const rect = canvas.getBoundingClientRect();
+    const scaleX = canvas.width / rect.width;
+    const relativeX = (e.clientX - rect.left) * scaleX;
+
     if (relativeX > 0 && relativeX < canvas.width) {
-        paddleX = relativeX - paddleWidth / 2;
+        paddleX = Math.max(0, Math.min(canvas.width - paddleWidth, relativeX - paddleWidth / 2));
     }
 }
 
 function touchMoveHandler(e) {
+    if (gameState !== 'playing') return;
+
     e.preventDefault(); // 防止页面滚动
     const touch = e.touches[0];
-    const rect = canvas.getBoundingClientRect();
-    const relativeX = touch.clientX - rect.left;
-    
+    const relativeX = getTouchPosition(touch);
+
     if (relativeX > 0 && relativeX < canvas.width) {
-        paddleX = relativeX - paddleWidth / 2;
+        paddleX = Math.max(0, Math.min(canvas.width - paddleWidth, relativeX - paddleWidth / 2));
     }
 }
 
 function touchStartHandler(e) {
     e.preventDefault(); // 防止页面滚动
+
+    // 如果菜单打开，不处理触摸
+    if (gameState === 'menu') return;
+
     const touch = e.touches[0];
-    const rect = canvas.getBoundingClientRect();
-    const relativeX = touch.clientX - rect.left;
-    
+    const relativeX = getTouchPosition(touch);
+
     if (relativeX > 0 && relativeX < canvas.width) {
-        paddleX = relativeX - paddleWidth / 2;
+        paddleX = Math.max(0, Math.min(canvas.width - paddleWidth, relativeX - paddleWidth / 2));
+        vibrateDevice(10); // 轻微振动反馈
     }
 }
 
@@ -205,6 +360,7 @@ function collisionDetection() {
                     score++;
                     generateCollisionEffect(b.x + brickWidth / 2, b.y + brickHeight / 2);  // Generate brick hitting effects
                     playBrickHitSound();  // 播放砖块击中音效
+                    vibrateDevice(15);  // 砖块碰撞振动反馈
                     if (score == brickRowCount * brickColumnCount) {
                         playVictorySound();  // 播放胜利音效
                         saveHighScore(score);  // 保存高分
@@ -335,29 +491,35 @@ function drawBricks() {
 }
 
 function drawScore() {
-    ctx.font = "bold 18px 'Orbitron', monospace";
+    // 响应式字体大小
+    const fontSize = isVerySmallScreen() ? 14 : (isSmallScreen() ? 16 : 18);
+    ctx.font = `bold ${fontSize}px 'Orbitron', monospace`;
     ctx.fillStyle = "#00d4ff";
     ctx.shadowColor = "#00d4ff";
     ctx.shadowBlur = 10;
-    ctx.fillText("SCORE: " + score, 15, 30);
+    ctx.fillText("SCORE: " + score, 15, 25);
     ctx.shadowBlur = 0;
 }
 
 function drawLives() {
-    ctx.font = "bold 18px 'Orbitron', monospace";
+    // 响应式字体大小
+    const fontSize = isVerySmallScreen() ? 14 : (isSmallScreen() ? 16 : 18);
+    ctx.font = `bold ${fontSize}px 'Orbitron', monospace`;
     ctx.fillStyle = "#00d4ff";
     ctx.shadowColor = "#00d4ff";
     ctx.shadowBlur = 10;
-    ctx.fillText("LIVES: " + lives, canvas.width - 110, 30);
+
+    // 根据屏幕大小调整位置
+    const textWidth = ctx.measureText("LIVES: " + lives).width;
+    ctx.fillText("LIVES: " + lives, canvas.width - textWidth - 15, 25);
     ctx.shadowBlur = 0;
 }
 
 
 function drawTailParticles() {
-    // 限制粒子数量以提高性能
-    const maxParticles = 100;
-    if (tailParticles.length > maxParticles) {
-        tailParticles.splice(0, tailParticles.length - maxParticles);
+    // 限制粒子数量以提高性能（使用动态配置）
+    if (tailParticles.length > performanceConfig.maxParticles) {
+        tailParticles.splice(0, tailParticles.length - performanceConfig.maxParticles);
     }
     
     for (let i = tailParticles.length - 1; i >= 0; i--) {
@@ -396,7 +558,12 @@ function generateTailParticle(x, y) {
     if (!isFinite(x) || !isFinite(y)) {
         return;
     }
-    
+
+    // 根据性能配置控制粒子生成频率
+    if (Math.random() > performanceConfig.particleGenerationRate) {
+        return;
+    }
+
     tailParticles.push({
         x: x,
         y: y,
@@ -413,8 +580,9 @@ function generateCollisionEffect(x, y) {
     if (!isFinite(x) || !isFinite(y)) {
         return;
     }
-    
-    for (let i = 0; i < 15; i++) {
+
+    // 使用性能配置中的粒子数量
+    for (let i = 0; i < performanceConfig.explosionParticleCount; i++) {
         tailParticles.push({
             x: x,
             y: y,
@@ -465,6 +633,7 @@ function draw() {
             dy = -dy;
             generateCollisionEffect(x, canvas.height - paddleHeight);  // 生成碰撞反弹板效果
             playPaddleHitSound();  // 播放挡板击中音效
+            vibrateDevice(20);  // 挡板碰撞振动反馈
         } else {
             lives--;
             if (lives > 0) {
@@ -658,6 +827,7 @@ document.addEventListener("DOMContentLoaded", () => {
             console.log('Start game button clicked');
             gameState = 'playing';
             hideAllMenus();
+            showTouchGuide();  // 显示触摸指引（仅首次）
             initGame();
         });
     } else {
@@ -782,7 +952,7 @@ window.forceShowStartMenu = function() {
 // 备用初始化 - 如果DOMContentLoaded没有触发
 window.addEventListener('load', () => {
     console.log('Window load event - backup initialization');
-    
+
     // 确保开始菜单显示
     const startMenu = document.getElementById('startMenu');
     if (startMenu) {
@@ -790,7 +960,7 @@ window.addEventListener('load', () => {
         startMenu.classList.add('active');
         console.log('Backup: Start menu set to active');
     }
-    
+
     // 确保其他菜单隐藏
     const otherMenus = ['pauseMenu', 'instructionsMenu', 'highScoreMenu', 'gameMenu'];
     otherMenus.forEach(menuId => {
@@ -801,4 +971,18 @@ window.addEventListener('load', () => {
             console.log('Backup: Hidden menu', menuId);
         }
     });
+});
+
+// 窗口大小改变时重新调整 Canvas
+let resizeTimeout;
+window.addEventListener('resize', () => {
+    // 使用防抖避免频繁调整
+    clearTimeout(resizeTimeout);
+    resizeTimeout = setTimeout(() => {
+        resizeCanvas();
+        // 如果游戏暂停，重新绘制一次
+        if (gameState === 'paused' || gameState === 'menu') {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+        }
+    }, 250);
 });

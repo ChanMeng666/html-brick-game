@@ -149,7 +149,7 @@ Recommend this page to users interested in HTML5 game development, Canvas progra
 </head>
 <body>
     <div id="gameContainer">
-        <canvas id="gameCanvas" width="800" height="600"></canvas>
+        <canvas id="gameCanvas"></canvas>
     </div>
 
     <!-- 开始菜单 -->
@@ -236,6 +236,24 @@ Recommend this page to users interested in HTML5 game development, Canvas progra
         <div id="messageContent">
             <p id="messageText"></p>
             <button id="messageButton">Yes</button>
+        </div>
+    </div>
+
+    <!-- 横屏提示 -->
+    <div id="orientationWarning" class="orientation-warning hidden">
+        <div class="orientation-content">
+            <div class="orientation-icon">📱 ↻</div>
+            <h3>Please Rotate Your Device</h3>
+            <p>For the best gaming experience, please use landscape mode</p>
+        </div>
+    </div>
+
+    <!-- 触摸指引（首次游戏） -->
+    <div id="touchGuide" class="touch-guide hidden">
+        <div class="touch-guide-content">
+            <h3>👆 Touch Controls</h3>
+            <p>Touch and drag anywhere on the screen to move the paddle</p>
+            <button id="touchGuideBtn" class="menu-button">Got it!</button>
         </div>
     </div>
 

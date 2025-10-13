@@ -190,6 +190,7 @@ button:hover {
     display: flex;
     gap: 12px;
     flex-direction: column;
+    transition: all 0.3s ease;
 }
 
 .ui-button {
@@ -266,39 +267,69 @@ button:hover {
     canvas {
         width: 100%;
         height: auto;
-        max-width: 400px;
-        max-height: 300px;
+        max-width: 480px;
+        max-height: 360px;
     }
-    
+
     .menu h1 {
         font-size: 32px;
     }
-    
+
     .menu h2 {
         font-size: 24px;
     }
-    
+
     .menu-button {
         width: 200px;
         font-size: 16px;
         padding: 12px 20px;
     }
-    
+
     .menu-content {
         padding: 20px;
         margin: 20px;
     }
+
+    /* 优化触摸指引和横屏提示 */
+    .orientation-content,
+    .touch-guide-content {
+        padding: 30px 20px;
+        max-width: 90%;
+    }
+
+    .orientation-icon {
+        font-size: 48px;
+    }
+
+    .orientation-content h3,
+    .touch-guide-content h3 {
+        font-size: 22px;
+    }
+
+    .orientation-content p,
+    .touch-guide-content p {
+        font-size: 15px;
+    }
     
     .game-ui {
-        right: 15px;
-        top: 50%;
-        gap: 10px;
+        /* 移动端：按钮放在底部中央 */
+        position: fixed;
+        bottom: 15px;
+        left: 50%;
+        right: auto;
+        top: auto;
+        transform: translateX(-50%);
+        flex-direction: row;
+        gap: 12px;
+        justify-content: center;
+        width: auto;
     }
 
     .ui-button {
-        padding: 8px 12px;
-        font-size: 11px;
+        padding: 10px 16px;
+        font-size: 12px;
         white-space: nowrap;
+        min-width: 90px;
     }
     
     .instructions p {
@@ -343,24 +374,109 @@ button:hover {
         max-width: 320px;
         max-height: 240px;
     }
-    
+
+    body {
+        font-size: 14px;
+    }
+
     .menu h1 {
         font-size: 24px;
+        margin-bottom: 8px;
     }
-    
+
     .menu h2 {
         font-size: 20px;
+        margin-bottom: 15px;
     }
-    
+
+    .subtitle {
+        font-size: 13px;
+        margin-bottom: 20px;
+    }
+
     .menu-button {
         width: 180px;
         font-size: 14px;
         padding: 10px 15px;
+        margin: 10px auto;
     }
-    
+
     .menu-content {
         padding: 15px;
         margin: 10px;
+        max-width: 95%;
+    }
+
+    .game-ui {
+        bottom: 10px;
+        gap: 8px;
+    }
+
+    .ui-button {
+        padding: 8px 12px;
+        font-size: 11px;
+        min-width: 75px;
+    }
+
+    /* 优化消息框 */
+    #messageBox {
+        padding: 20px;
+    }
+
+    #messageContent {
+        padding: 20px;
+    }
+
+    #messageText {
+        font-size: 16px;
+    }
+
+    /* 优化触摸指引和横屏提示 */
+    .orientation-content,
+    .touch-guide-content {
+        padding: 25px 15px;
+        max-width: 95%;
+        margin: 10px;
+    }
+
+    .orientation-icon {
+        font-size: 40px;
+        margin-bottom: 15px;
+    }
+
+    .orientation-content h3,
+    .touch-guide-content h3 {
+        font-size: 18px;
+        margin-bottom: 12px;
+    }
+
+    .orientation-content p,
+    .touch-guide-content p {
+        font-size: 13px;
+        line-height: 1.4;
+    }
+
+    /* 优化说明文本 */
+    .instructions {
+        padding: 15px;
+        margin: 15px 0;
+    }
+
+    .instructions p {
+        font-size: 13px;
+        margin: 8px 0;
+    }
+
+    /* 优化高分榜 */
+    .high-score-list {
+        font-size: 13px;
+        padding: 15px;
+        margin: 15px 0;
+    }
+
+    .score-item {
+        padding: 8px;
+        margin: 4px 0;
     }
     
     /* Developer Branding Very Small Mobile Styles */
@@ -435,6 +551,13 @@ body::before {
 #gameContainer {
     position: relative;
     animation: glow 3s ease-in-out infinite;
+    margin-bottom: 70px; /* 为底部按钮留出空间 */
+}
+
+@media (min-width: 769px) {
+    #gameContainer {
+        margin-bottom: 0; /* 桌面端不需要底部间距 */
+    }
 }
 
 /* Developer Branding Styles */
@@ -524,4 +647,108 @@ body::before {
     color: #ffffff;
     transform: translateY(-2px);
     box-shadow: 0 4px 15px rgba(0, 212, 255, 0.3);
+}
+
+/* 横屏提示样式 */
+.orientation-warning {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(135deg, rgba(0, 0, 0, 0.95), rgba(30, 60, 114, 0.95));
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 2000;
+    font-family: 'Orbitron', monospace;
+}
+
+.orientation-content {
+    text-align: center;
+    padding: 40px;
+    background: linear-gradient(135deg, rgba(0, 0, 0, 0.8), rgba(30, 60, 114, 0.6));
+    border-radius: 20px;
+    border: 2px solid rgba(0, 212, 255, 0.5);
+    box-shadow: 0 0 30px rgba(0, 212, 255, 0.3);
+    backdrop-filter: blur(10px);
+    max-width: 400px;
+}
+
+.orientation-icon {
+    font-size: 64px;
+    margin-bottom: 20px;
+    animation: rotate 2s ease-in-out infinite;
+}
+
+@keyframes rotate {
+    0%, 100% { transform: rotate(0deg); }
+    50% { transform: rotate(90deg); }
+}
+
+.orientation-content h3 {
+    font-size: 24px;
+    color: #00d4ff;
+    margin-bottom: 15px;
+    text-shadow: 0 0 15px rgba(0, 212, 255, 0.7);
+}
+
+.orientation-content p {
+    font-size: 16px;
+    color: #ffffff;
+    font-family: 'Exo 2', sans-serif;
+    opacity: 0.9;
+}
+
+/* 触摸指引样式 */
+.touch-guide {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.85);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 1500;
+    font-family: 'Orbitron', monospace;
+    backdrop-filter: blur(5px);
+}
+
+.touch-guide-content {
+    text-align: center;
+    padding: 40px;
+    background: linear-gradient(135deg, rgba(0, 0, 0, 0.9), rgba(30, 60, 114, 0.7));
+    border-radius: 20px;
+    border: 2px solid rgba(0, 212, 255, 0.5);
+    box-shadow: 0 0 30px rgba(0, 212, 255, 0.3);
+    max-width: 400px;
+    animation: fadeInScale 0.3s ease-out;
+}
+
+@keyframes fadeInScale {
+    from {
+        opacity: 0;
+        transform: scale(0.9);
+    }
+    to {
+        opacity: 1;
+        transform: scale(1);
+    }
+}
+
+.touch-guide-content h3 {
+    font-size: 28px;
+    color: #00d4ff;
+    margin-bottom: 20px;
+    text-shadow: 0 0 15px rgba(0, 212, 255, 0.7);
+}
+
+.touch-guide-content p {
+    font-size: 16px;
+    color: #ffffff;
+    margin-bottom: 25px;
+    font-family: 'Exo 2', sans-serif;
+    line-height: 1.5;
 }
